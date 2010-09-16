@@ -17,6 +17,28 @@ class LOOP extends CLOUD {
      for (int i=0; i<n; i++) {float x=x(P[i],M,P[n(i)]), y=abs(ay(P[i],M,P[n(i)])); if ( 0.2<x && x<0.8 && y<d && y<height/20) {e=i; d=y;}; }
      if (e!=-1) { for (int i=n-1; i>e; i--) P[i+1].setTo(P[i]); n++; p=n(e); P[p].setToMouse();  };
      }
+// ADDED FOR PROJECT 1
+// Inserts point into specific position in loop
+// We want to insert the new point after P[ind]
+void insert(pt M, int ind) {
+  for(int i = n-1; i > ind; i--) {
+    P[i+1] = P[i];
+  }
+  n++;
+  P[n(ind)] = M;
+}
+
+void insert(pt M, boolean check) {
+  if(!check) {
+    insert(M);
+  }
+  for(int i = 0; i < n; i++) {
+    if(angle(P[n(i)], P[i], M) < 0.1) {
+      insert(M, i);
+      break;
+     } 
+   }
+}
 
  // ************************************** TRAVERSAL UTILITIES *********************************
  int n(int j) {  if (j==n-1) {return (0);}  else {return(j+1);}  };  // next point in loop
@@ -107,8 +129,8 @@ void registerToLoop(LOOP Q) {  // vertex registration
    float a=alignentAngle(G);  float m=moment(G); float r = sqrt(sqrt(m/PI*2.)); vec V=R(V(r,0),a); show(G,V); show(G,-1,V);  show(G,r);}
 
 // ************************************** INTERSECTIONS *********************************
- boolean stabbed(pt A, pt B) {for (int i=0; i<n; i++) if(edgesIntersect(A,B,P[i],P[n(i)])) return true; return false;}
- boolean stabbed(pt A, pt B, int j) {for (int i=0; i<n; i++) if ((i!=j)&&(edgesIntersect(A,B,P[i],P[n(i)]))) return true; return false; }
+ int stabbed(pt A, pt B) {for (int i=0; i<n; i++) if(edgesIntersect(A,B,P[i],P[n(i)])) return i; return -1;}
+ int stabbed(pt A, pt B, int j) {for (int i=0; i<n; i++) if ((i!=j)&&(edgesIntersect(A,B,P[i],P[n(i)]))) return i; return -1; }
 
 // ************************************** RESAMPLE *********************************
  // ADDED FOR PROJECT 1

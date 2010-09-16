@@ -19,7 +19,7 @@ void setup() {  // Executed once
   smooth();   strokeJoin(ROUND); strokeCap(ROUND); // set drawing modes for high-quality slower drawings
   rectMode(CENTER); // needed for buttons to work properly !
   PFont font = loadFont("ArialMT-24.vlw"); textFont(font, 16);      // load font for writing on the canvas
-  pic = loadImage("data/pic.jpg");                                  // load image names pic from file pic.jpg in folder data
+  pic = loadImage("brian.jpg");                                  // load image names pic from file pic.jpg in folder data
   MYsetup();                                                        // execute application specific setup tasks (see MYxxx)
   } 
 

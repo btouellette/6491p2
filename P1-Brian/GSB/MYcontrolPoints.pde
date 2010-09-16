@@ -20,7 +20,7 @@ void MYsetup() { // executed once at start
   }; 
  
 void MYdraw () { // executed at each frame
-  scribeBlack("Project 1 (Constrained Delaunay Triangulation) by Brian Ouellette and Jonathan Brownsworth",0);
+  scribeBlack("Project 1 (Constrained Delaunay Triangulation) by Brian Ouellette",0);
   scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);
   if(showTriangles.isTrue)  C.showDelaunayOfPoints(-2); 
   if(showMesh.isTrue)  M.showMesh(); 
@@ -71,7 +71,7 @@ void  MYkeyReleased() {  }
 void MYshowHelp() {  // Application specific help text to appear in the help pane when user pressed the SPACE BAR
  text("CS 6491 -- Fall 2010 -- Instructor Jarek Rossignac",0,0); translate(0,20);
  text("Project 1: Constrained Delaunay Triangulation",0,0); translate(0,20);
- text("Student: Brian Ouellette and Jonathan Brownsworth",0,0); translate(0,20);
+ text("Student: Brian Ouellette",0,0); translate(0,20);
  text("Date submitted: September 9, 2010",0,0); translate(0,20);
   text("  ",0,0); translate(0,20);
  text("USAGE  ",0,0); translate(0,20);
@@ -143,7 +143,7 @@ void MYcheckButtons() {          // checks whether any of my buttons was pressed
   if(coarsen.check(buttonCounter.i())) C.coarsen();
   if(resample.check(buttonCounter.i())) C.resample(200);
   showTriangles.check(buttonCounter.i());
-  if(computeMesh.check(buttonCounter.i())) C.makeDelaunayOfPoints(M);
+  if(computeMesh.check(buttonCounter.i())) { C.makeDelaunayOfPoints(M); M.classifyTriangles(C); }
   showMesh.check(buttonCounter.i());
   }
 
@@ -174,6 +174,13 @@ void compute() {
   }
   for (int i=0; i<Cnew2.n; i++) {
     Cnew.appendPoint(Cnew2.P[i]);
+  }
+  LOOP Cresampled = new LOOP(3);
+  Cresampled.empty();
+  Cresampled.copyFrom(C);
+  Cresampled.resample(100);
+  for (int i=0; i<Cresampled.n; i++) {
+    Cnew.appendPoint(Cresampled.P[i]);
   }*/
   // Add back in the loop vertices, these were removed during the refine() operation
   for (int i=0; i<C.n; i++) {
@@ -181,4 +188,16 @@ void compute() {
   }
   Cnew.makeDelaunayOfPoints(M);
   M.classifyTriangles(C);
+  println("first pass done");
+  if(M.redoDelaunay) {
+    println("adding " + M.numNewPoints + " intersections");
+    for(int i = 0; i < M.numNewPoints; i++) {
+      Cnew.insert(M.newPoints[i], M.newIndex[i]);
+      //print(M.newPoints[i].x + "," + M.newPoints[i].y + " ");
+    }
+    println("second pass");
+    Cnew.makeDelaunayOfPoints(M);
+    println("classifying " + M.nt);
+    M.classifyTriangles(C);
+  }
 }

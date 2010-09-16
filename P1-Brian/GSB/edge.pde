@@ -19,10 +19,10 @@
 // CHANGED FOR PROJECT 1
 // If either of the endpoints are the same then don't record the lines as intersecting
 boolean edgesIntersect(pt A, pt B, pt C, pt D) {
-  if(A.x == C.x && A.y == C.y || 
-     A.x == D.x && A.y == D.y ||
-     B.x == C.x && B.y == C.y ||
-     B.x == D.x && B.y == D.y) {
+  if(abs(A.x - C.x) < 0.01 && abs(A.y - C.y) < 0.01 || 
+     abs(A.x - D.x) < 0.01 && abs(A.y - D.y) < 0.01 ||
+     abs(B.x - C.x) < 0.01 && abs(B.y - C.y) < 0.01 ||
+     abs(B.x - D.x) < 0.01 && abs(B.y - D.y) < 0.01) {
     return false;
   }
   return cw(A,B,C)!=cw(A,B,D) && cw(C,D,A)!=cw(C,D,B);
