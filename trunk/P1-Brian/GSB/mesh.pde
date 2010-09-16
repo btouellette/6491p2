@@ -167,7 +167,14 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
    noFill();
  }; 
  // CHANGED FOR PROJECT 1
+ boolean redoDelaunay;
+ pt[] newPoints = new pt[3*maxnt];
+ int[] newIndex = new int[3*maxnt];
+ int numNewPoints;
  void classifyTriangles(LOOP C) {
+   redoDelaunay = false;
+   numNewPoints = 0;
+
    for(int t=0; t<nt; t++) {
      outside[t] = false;
      // If the center of mass isn't inside the polygon then there is no way the triangle is contained in the loop
@@ -177,11 +184,49 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
      visible[t] = !outside[t];
      // Check whether any of the edges intersect any edges along the loop
      // If they do set the triangle stabbed for coloring
-     stabbed[t] = C.stabbed(G[V[3*t]],   G[V[3*t+1]]);
-     stabbed[t] = stabbed[t] || C.stabbed(G[V[3*t+1]], G[V[3*t+2]]);
-     stabbed[t] = stabbed[t] || C.stabbed(G[V[3*t+2]], G[V[3*t]]);
+     // Test each edge
+     pt testPt1, testPt2;
+     testPt1 = G[V[3*t]];
+     testPt2 = G[V[3*t+1]];
+     stabbed[t] = testAndAdd(testPt1, testPt2);
+     // Next edge
+     testPt1 = G[V[3*t+1]];
+     testPt2 = G[V[3*t+2]];
+     stabbed[t] = stabbed[t] || testAndAdd(testPt1, testPt2);
+     // Last edge
+     testPt1 = G[V[3*t+2]];
+     testPt2 = G[V[3*t]];
+     stabbed[t] = stabbed[t] || testAndAdd(testPt1, testPt2);
    }
  }
+ 
+ boolean testAndAdd(pt testPt1, pt testPt2) {
+   //Stabbed returns -1 for no intersection and the index into P for intersection
+   int test = C.stabbed(testPt1, testPt2);
+   if(test != -1) {
+     // Since each edge is part of two triangles we have to make sure to only add the intersection once
+     boolean addedAlready = false;
+     pt intersection = linesIntersection(testPt1, testPt2, C.P[test], C.P[n(test)]);
+     for(int k = 0; k < numNewPoints; k++) {
+       if(abs(intersection.x - newPoints[k].x) < 0.01 && 
+          abs(intersection.y - newPoints[k].y) < 0.01) {
+         addedAlready = true;
+      }
+     }
+     if(!addedAlready) {
+       newPoints[numNewPoints] = intersection;
+       newIndex[numNewPoints] = test;
+       numNewPoints++;
+       //redoDelaunay = true;
+       //testAndAdd(testPt1, intersection);
+       //testAndAdd(intersection, testPt2);
+     }
+     // Return true if we were stabbed
+     return true;
+   }
+   return false;
+ }
+
 //  ==========================================================  VERTICES ===========================================
  boolean showVertices=false;
  int nv = 0;                              // current  number of vertices
