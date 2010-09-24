@@ -12,25 +12,70 @@ LOOP C = new LOOP(3);
 int pC=0;  // counter of which file number the points are saved to (not used here)
 int nFrames=9; // not used
 
+pt P = P(200, 200);
+float distanceToP, angleToP;
+pt A = P(250, 400), B = P(400, 250), O = P(300, 300);
+float prev_radius = 0;
+boolean first_run = true;
+
 void MYsetup() { // executed once at start
    C.declarePoints(); 
    // C.resetPointsOnCircle(); 
-   C.loadPts("data/P"+str(pC));
+   // C.loadPts("data/P"+str(pC));
    M.declare(); M.init(); C.makeDelaunayOfPoints(M);
   }; 
  
 void MYdraw () { // executed at each frame
   scribeBlack("Project 1 (Constrained Delaunay Triangulation) by Brian Ouellette",0);
-  scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);
+  /*scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);
   if(showTriangles.isTrue)  C.showDelaunayOfPoints(-2); 
   if(showMesh.isTrue)  M.showMesh(); 
   if(showEdges.isTrue) {noFill(); strokeWeight(3); stroke(red); C.drawEdges(); }
   if(showLetters.isTrue) {fill(blue); C.writePointLetters(); noFill();   stroke(blue); noFill(); C.drawPoints(13); } // toggle in menu to write letters
-  else {stroke(blue); fill(blue); C.drawPoints(3); }; // draws points as small dots
+  else {stroke(blue); fill(blue); C.drawPoints(3); }; // draws points as small dots*/
+  
+  stroke(blue);
+  A.show(3);
+  A.showLabel("A");
+  B.show(3);
+  B.showLabel("B");
+  O.show(3);
+  O.showLabel("O");
+  showArcThrough(A,O,B);
+  
+  pt center = CircumCenter(A,O,B); // center of circle passing through the 3 points
+  float radius = circumRadius(A,O,B); // radius of circumcenter
+  show(center, O);
+  center.show(3);
+  center.showLabel("center");
+  // Angle is -pi/2 to pi/2, this is the arcangle of the arc
+  float angle = angle(A, center, B);
+  //show(center, R(V(center, O), PI/16));  
+  
+  if(first_run) {
+    first_run = false;
+    // P is some angle further down the arc from point O
+    // It is also some distance from the arc measured in terms of the radius
+    // Record both
+    distanceToP = d(center,P)/radius;
+    angleToP = angle(O, center, P);
+  } else {
+    // Recalculate where P should be with the potential new radius and O position
+    // Scale distance to P with the scale in radius
+    // Whether this needs to be radius/prev_radius or prev_radius/radius depends on which side of the arc P is on
+    distanceToP = distanceToP * radius/prev_radius;
+    // Angle won't scale
+    // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
+    vec Pvec = S(distanceToP, R(V(center,O), angleToP));
+    P = T(center, Pvec);    
+  }
+  P.show(3);
+  P.showLabel("P");
+  prev_radius = radius;  
   }
  
 void MYmousePressed() {
-   C.pickClosestPoint(Mouse()); 
+   C.pickClosestPoint(Mouse());
    if (keyPressed && key=='i') C.insert(Mouse()); // add a point
    if (keyPressed && key=='d') C.deletePoint(); // add a point
    if (keyPressed && key=='a') C.appendPoint(Mouse()); // add a point
@@ -41,8 +86,11 @@ void MYmouseDragged() {     // application-specific actions executed when the mo
  if (!mouseIsInWindow()) return;
  if (!keyPressed||(key=='i'||key=='a')) {C.dragPoint(MouseDrag()); } 
  else {
+     if (key=='A') A.translateBy(MouseDrag());
+     if (key=='B') B.translateBy(MouseDrag());
+     if (key=='O') O.translateBy(MouseDrag());
      if (key=='t') C.rotatePointsAroundCenterOfMass(Mouse(),Pmouse()); // rotate all points around their center of mass
-     if (key=='m') C.translatePoints(MouseDrag()); // rotate all points around their center of mass
+     if (key=='m') { A.translateBy(MouseDrag()); B.translateBy(MouseDrag()); O.translateBy(MouseDrag()); } // rotate all points around their center of mass
      if (key=='z') C.scalePointsAroundCenterOfMass(Mouse(),MouseDrag()); // scale all points with respect to their center of mass
      };
  }
