@@ -14,6 +14,7 @@ int nFrames=9; // not used
 
 pt P = P(200, 200);
 float distanceToP, angleToP;
+float distanceTo[], angleTo[];
 pt A = P(250, 400), B = P(400, 250), O = P(300, 300);
 float prev_radius = 0;
 boolean first_run = true;
@@ -23,18 +24,70 @@ void MYsetup() { // executed once at start
    // C.resetPointsOnCircle(); 
    // C.loadPts("data/P"+str(pC));
    M.declare(); M.init(); C.makeDelaunayOfPoints(M);
+   distanceTo = new float[C.n];
+   angleTo = new float[C.n];
   }; 
- 
+
+/**
+*** Tests to see if the point is behind the curve in the sense that it
+*** is on the opposite side of the bulge of the curve from the line AB
+**/
+boolean behindCurveA(pt P)
+{
+  RAY rA = ray(B,A);  //Ray in the direction of A
+  if(isRightOf(P,A,rA.T)!=isRightOf(O,A,rA.T))
+  {
+    //println("BEHIND CURVE");
+    return true;
+  }
+  //println("NOT BEHIND CURVE");
+  return false;
+}
+
+
+/**
+*** Tests to see if the point is behind the curve in the sense that it
+*** is within the circle formed by going through A, B, and O
+**/
+boolean behindCurveB(pt P,pt center,float radius)
+{
+  if(d(center,P)<radius)
+  {
+    //println("BEHIND CURVE");
+    return true;
+  }
+  //println("NOT BEHIND CURVE");
+  return false;
+}
+
+/**
+*** Tests to see if the point is behind the curve in the sense that it
+*** is between the arc and the line segment formed by AB
+**/
+boolean behindCurveC(pt P,pt center,float radius)
+{
+  RAY rA = ray(B,A);  //Ray in the direction of A
+  if((isRightOf(P,A,rA.T)==isRightOf(O,A,rA.T))&&d(center,P)<radius)
+  {
+    //println("BEHIND CURVE");
+    return true;
+  }
+  //println("NOT BEHIND CURVE");
+  return false;
+}
+
+
 void MYdraw () { // executed at each frame
   scribeBlack("Project 1 (Constrained Delaunay Triangulation) by Brian Ouellette",0);
-  /*scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);
+  /*scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);*/
   if(showTriangles.isTrue)  C.showDelaunayOfPoints(-2); 
   if(showMesh.isTrue)  M.showMesh(); 
   if(showEdges.isTrue) {noFill(); strokeWeight(3); stroke(red); C.drawEdges(); }
   if(showLetters.isTrue) {fill(blue); C.writePointLetters(); noFill();   stroke(blue); noFill(); C.drawPoints(13); } // toggle in menu to write letters
-  else {stroke(blue); fill(blue); C.drawPoints(3); }; // draws points as small dots*/
+  else {stroke(blue); fill(blue); C.drawPoints(3); }; // draws points as small dots
   
   stroke(blue);
+  noFill();
   A.show(3);
   A.showLabel("A");
   B.show(3);
@@ -50,27 +103,36 @@ void MYdraw () { // executed at each frame
   center.showLabel("center");
   // Angle is -pi/2 to pi/2, this is the arcangle of the arc
   float angle = angle(A, center, B);
-  //show(center, R(V(center, O), PI/16));  
-  
-  if(first_run) {
-    first_run = false;
-    // P is some angle further down the arc from point O
-    // It is also some distance from the arc measured in terms of the radius
-    // Record both
-    distanceToP = d(center,P)/radius;
-    angleToP = angle(O, center, P);
-  } else {
-    // Recalculate where P should be with the potential new radius and O position
-    // Scale distance to P with the scale in radius
-    // Whether this needs to be radius/prev_radius or prev_radius/radius depends on which side of the arc P is on
-    distanceToP = distanceToP * radius/prev_radius;
-    // Angle won't scale
-    // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
-    vec Pvec = S(distanceToP, R(V(center,O), angleToP));
-    P = T(center, Pvec);    
+  //show(center, R(V(center, O), PI/16)); \
+  for(int i=0;i<C.n;i++)
+  {
+    if(first_run) {
+      first_run = false;
+      // P is some angle further down the arc from point O
+      // It is also some distance from the arc measured in terms of the radius
+      // Record both
+      //distanceToP = d(center,P)/radius;
+      //angleToP = angle(O, center, P);
+      distanceTo[i] = d(center,C.P[i])/radius;
+      angleTo[i] = angle(O, center, C.P[i]);
+    } else {
+      // Recalculate where P should be with the potential new radius and O position
+      // Scale distance to P with the scale in radius
+      // Whether this needs to be radius/prev_radius or prev_radius/radius depends on which side of the arc P is on
+      //distanceToP = distanceToP * radius/prev_radius;
+      distanceTo[i] = distanceTo[i] * radius/prev_radius;
+      // Angle won't scale
+      // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
+      //vec Pvec = S(distanceToP, R(V(center,O), angleToP));
+      //P = T(center, Pvec);    
+      vec tempVec = S(distanceTo[i], R(V(center,O), angleTo[i]));
+      C.P[i] = T(center, tempVec);
+    }
+    C.P[i].show(3);
+    C.P[i].showLabel("P"+i);
   }
-  P.show(3);
-  P.showLabel("P");
+  //P.show(3);
+  //P.showLabel("P");
   prev_radius = radius;  
   }
  
