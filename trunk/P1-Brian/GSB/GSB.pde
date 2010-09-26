@@ -15,7 +15,8 @@ boolean makingPicture=false;    // used to prevent the menu from showing when ma
 PImage pic; // picture of author's face that is displayed in the help pane, read from file pic.jpg in data folder
 
 void setup() {  // Executed once
-  size(900,700); // Opens graphic canvas (wider for manu on the right)
+  //size(900,700); // Opens graphic canvas (wider for manu on the right)
+  size(1200,760); // Opens graphic canvas (wider for manu on the right)
   smooth();   strokeJoin(ROUND); strokeCap(ROUND); // set drawing modes for high-quality slower drawings
   rectMode(CENTER); // needed for buttons to work properly !
   PFont font = loadFont("ArialMT-24.vlw"); textFont(font, 16);      // load font for writing on the canvas
