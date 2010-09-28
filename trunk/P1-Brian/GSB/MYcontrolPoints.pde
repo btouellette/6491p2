@@ -127,7 +127,11 @@ void MYdraw () { // executed at each frame
         // Angle won't scale
         // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
         //vec Pvec = S(distanceToP, R(V(center,O), angleToP));
-        //P = T(center, Pvec);    
+        //P = T(center, Pvec);
+        /* Method 2 - Area corrected skeleton bending */
+        if (radius != prev_radius) {
+          distanceTo[i] = (sqrt(radius*prev_radius*(radius*prev_radius + 2*prev_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*prev_radius)/prev_radius;
+        }
         /* Method 1 - Skeleton bending */
         vec tempVec = S(1+distanceTo[i]/radius, R(V(center,O), angleTo[i]));
         C.P[i] = T(center, tempVec);
