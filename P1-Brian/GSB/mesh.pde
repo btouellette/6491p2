@@ -162,7 +162,8 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
        fill(lred);
      else
        fill(lgreen);
-     show(g(3*t),g(3*t+1),g(3*t+2),-2);
+     if(visible[t])
+       show(g(3*t),g(3*t+1),g(3*t+2),-2);
    };
    noFill();
  }; 
@@ -181,7 +182,6 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
      if(!C.contains(triCenter(t))) {
        outside[t] = true;
      } 
-     visible[t] = !outside[t];
      // Check whether any of the edges intersect any edges along the loop
      // If they do set the triangle stabbed for coloring
      // Test each edge
@@ -197,6 +197,7 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
      testPt1 = G[V[3*t+2]];
      testPt2 = G[V[3*t]];
      stabbed[t] = stabbed[t] || testAndAdd(testPt1, testPt2);
+     visible[t] = !(outside[t] || stabbed[t]);
    }
  }
  
