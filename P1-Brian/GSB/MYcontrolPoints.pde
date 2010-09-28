@@ -14,7 +14,8 @@ int nFrames=9; // not used
 
 //pt P = P(200, 200);
 //float distanceToP, angleToP;
-float distanceTo[]=new float[5000];float angleTo[]= new float[5000];
+float distanceTo[]=new float[5000];
+float angleTo[]= new float[5000];
 pt A = P(250, 400), B = P(400, 250), O = P(300, 300);
 float prev_radius = 0;
 boolean first_run[] = new boolean[5000];
@@ -24,7 +25,7 @@ void MYsetup() { // executed once at start
    // C.resetPointsOnCircle(); 
    // C.loadPts("data/P"+str(pC));
    M.declare(); M.init(); C.makeDelaunayOfPoints(M);
-   for(int x=0;x<5000;x++) first_run[x]=true;
+   for(int x=0;x<5000;x++)first_run[x]=true;
   }; 
 
 /**
@@ -115,19 +116,20 @@ void MYdraw () { // executed at each frame
         // Record both
         //distanceToP = d(center,P)/radius;
         //angleToP = angle(O, center, P);
-        distanceTo[i] = d(center,C.P[i])/radius;
+        distanceTo[i] = d(center,C.P[i]) - radius;
         angleTo[i] = angle(O, center, C.P[i]);
       } else {
         // Recalculate where P should be with the potential new radius and O position
         // Scale distance to P with the scale in radius
         // Whether this needs to be radius/prev_radius or prev_radius/radius depends on which side of the arc P is on
         //distanceToP = distanceToP * radius/prev_radius;
-        distanceTo[i] = distanceTo[i] * (radius/prev_radius);
+        //distanceTo[i] = distanceTo[i] * (radius/prev_radius);
         // Angle won't scale
         // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
         //vec Pvec = S(distanceToP, R(V(center,O), angleToP));
         //P = T(center, Pvec);    
-        vec tempVec = S(distanceTo[i], R(V(center,O), angleTo[i]));
+        /* Method 1 - Skeleton bending */
+        vec tempVec = S(1+distanceTo[i]/radius, R(V(center,O), angleTo[i]));
         C.P[i] = T(center, tempVec);
       }
       C.P[i].show(3);
