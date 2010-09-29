@@ -24,7 +24,7 @@ boolean first_run[] = new boolean[5000];
 void MYsetup() { // executed once at start
    C.declarePoints(); 
    // C.resetPointsOnCircle(); 
-   // C.loadPts("data/P"+str(pC));
+   C.loadPts("data/P"+str(pC));
    M.declare(); M.init(); C.makeDelaunayOfPoints(M);
    for(int x=0;x<5000;x++)first_run[x]=true;
   }; 
