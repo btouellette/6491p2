@@ -256,6 +256,10 @@ void showDelaunayOfPoints(float o) {
 
                    };
     }
+    
+void updatePoints(Mesh M) {
+    for (int i=0; i<M.nv; i++) M.G[i].setTo(P[i]);
+}
    
 void makeDelaunayOfPoints(Mesh M) { 
     M.init(); // empty the mesh
