@@ -18,6 +18,7 @@ float distanceTo[]=new float[5000];
 float angleTo[]= new float[5000];
 pt A = P(250, 400), B = P(400, 250), O = P(300, 300);
 float prev_radius = 0;
+float original_radius;
 boolean first_run[] = new boolean[5000];
 
 void MYsetup() { // executed once at start
@@ -114,26 +115,18 @@ void MYdraw () { // executed at each frame
         // P is some angle further down the arc from point O
         // It is also some distance from the arc measured in terms of the radius
         // Record both
-        //distanceToP = d(center,P)/radius;
-        //angleToP = angle(O, center, P);
+        original_radius = radius;
         distanceTo[i] = d(center,C.P[i]) - radius;
         angleTo[i] = angle(O, center, C.P[i]);
       } else {
+        /* Method 2 - Area corrected skeleton bending */
         // Recalculate where P should be with the potential new radius and O position
         // Scale distance to P with the scale in radius
-        // Whether this needs to be radius/prev_radius or prev_radius/radius depends on which side of the arc P is on
-        //distanceToP = distanceToP * radius/prev_radius;
-        //distanceTo[i] = distanceTo[i] * (radius/prev_radius);
+        float distance = (sqrt(radius*original_radius*(radius*original_radius + 2*original_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*original_radius)/original_radius;
+        /* Method 1 - Skeleton bending */
         // Angle won't scale
         // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
-        //vec Pvec = S(distanceToP, R(V(center,O), angleToP));
-        //P = T(center, Pvec);
-        /* Method 2 - Area corrected skeleton bending */
-        if (radius != prev_radius) {
-          distanceTo[i] = (sqrt(radius*prev_radius*(radius*prev_radius + 2*prev_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*prev_radius)/prev_radius;
-        }
-        /* Method 1 - Skeleton bending */
-        vec tempVec = S(1+distanceTo[i]/radius, R(V(center,O), angleTo[i]));
+        vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
         C.P[i] = T(center, tempVec);
       }
       C.P[i].show(3);
@@ -141,7 +134,6 @@ void MYdraw () { // executed at each frame
     }
     //P.show(3);
     //P.showLabel("P");
-    prev_radius = radius;  
   }//End If
   }//End Method
  
