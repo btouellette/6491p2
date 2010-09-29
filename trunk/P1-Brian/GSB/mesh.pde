@@ -115,10 +115,10 @@ void computeBox() {
   };
 void showMesh() {
   int col=60;
-  stroke(green); strokeWeight(8); showBorder(); strokeWeight(1); // shows border as fat cyan curve
+  //stroke(green); strokeWeight(8); showBorder(); strokeWeight(1); // shows border as fat cyan curve
   noSmooth(); noStroke();
   if(showTriangles) showTriangles();  
-  if (showEdges) {stroke(dblue); strokeWeight(1); for(int i=0; i<nc; i++) drawEdge(i); };  
+  //if (showEdges) {stroke(dblue); strokeWeight(1); for(int i=0; i<nc; i++) drawEdge(i); };  
   if (showSelectedTriangle) {noStroke(); fill(dgreen); shade(t(c)); noFill(); }; 
   if (showVertices) {noStroke(); noSmooth();fill(white); for (int v=0; v<nv; v++)  G[v].show(rr); noFill();};
   if (showLabels) { fill(black); 
