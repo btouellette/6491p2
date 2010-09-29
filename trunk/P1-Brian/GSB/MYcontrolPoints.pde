@@ -130,8 +130,11 @@ void MYdraw () { // executed at each frame
         C.P[i] = T(center, tempVec);
         /* Method 3 - As Rigid As Possible */
       }
-      C.P[i].show(3);
       //C.P[i].showLabel("P"+i);
+    }
+    C.updatePoints(M);
+    for(int i=0; i<C.n;i++) {
+      C.P[i].show(3);
     }
     //P.show(3);
     //P.showLabel("P");
