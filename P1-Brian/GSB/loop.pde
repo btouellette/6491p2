@@ -251,7 +251,7 @@ void showDelaunayOfPoints(float o) {
                    pt CC=CircumCenter(P[i],P[j],P[k]);  float r=d(P[i],CC);                
                    boolean found=false;
                    for (int m=0; m<n; m++) if (d(P[m],CC)+0.001<r) found=true;
-                   if (!found) {if(contains(A(P[i],P[j],P[k]))) {fill(green); show(P[i],P[j],P[k],o);} };                   //  Removed "else fill(yellow) from before show and added braces" if (cw(P[i],P[n(i)],P[j])) {}
+                   if (!found) {if(contains(A(P[i],P[j],P[k]))) {fill(green); show(P[i],P[j],P[k],o);} };                   //Removed "else fill(yellow);" from before show and added braces. if (cw(P[i],P[n(i)],P[j])) {}
                      
 
                    };
