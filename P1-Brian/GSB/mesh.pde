@@ -34,6 +34,7 @@ class Mesh {
  int[] V = new int [3*maxnt];               // V table (triangle/vertex indices)
  int[] O = new int [3*maxnt];               // O table (opposite corner indices)
  int[] Tc = new int[3*maxnt];               // corner type used for some applications
+ float barycentric[][] = new float[3*maxnt][3];
 
 
 // operations on an arbitrary corner
@@ -490,9 +491,50 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
  int pop() {if (stackHeight==0){ println("Stack is empty"); stackHeight=1;}; return(stack[--stackHeight]);}
  void push(int c) {stack[stackHeight++]=c; }
  void resetStack() {stackHeight=1;};
+ 
+   //Compute the barycentric coords of each corner with respect to its opposite triangle and fills the
+   void computeBarycentric()
+   {
+      //For each corner in the mesh
+      for(int c=0; c<nc; c++)
+      {
+         //Only do the calculations if there is an opposite
+         if(o(c)!=c)
+         {
+           //Let vi be the vertex
+           pt vi = g(c);
+           //Let tk be the opposite triangle
+           int tk = t(o(c));
+           pt tkA = g(tk);
+           pt tkB = g(tk+1);
+           pt tkC = g(tk+2);
+           //Compute the barycentric coordinates w/respect to the opposite triangle
+           float tkArea = area(tkA,tkB,tkC);
+           if(1-tkArea>0.999&&1-tkArea<1.001) //If we leave it without this check, points may end up with Infinity, -Infinity, and NaN for coordinates.
+           {
+             barycentric[c][0] = 0.0;
+             barycentric[c][1] = 0.0;
+             barycentric[c][2] = 0.0;
+           }
+           else
+           {
+             barycentric[c][0] = area(vi,tkB,tkC)/tkArea;
+             barycentric[c][1] = area(tkA,vi,tkC)/tkArea;
+             barycentric[c][2] = area(tkA,tkB,vi)/tkArea;
+           }
+         }
+         else
+         {
+           barycentric[c][0] = 0.0;
+           barycentric[c][1] = 0.0;
+           barycentric[c][2] = 0.0;
+         }
+         println(barycentric[c][0]+" "+barycentric[c][1]+" "+" "+barycentric[c][2]);
+       }
+       if(nc>5){exit();}
+    };
 
   } // ==== END OF MESH CLASS
   
 float log2(float x) {float r=0; if (x>0.00001) { r=log(x) / log(2);} ; return(r);}
 vec labelD=new vec(-4,+4);           // offset vector for drawing labels
-
