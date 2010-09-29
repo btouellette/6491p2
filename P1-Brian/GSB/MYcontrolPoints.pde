@@ -135,6 +135,7 @@ void MYdraw () { // executed at each frame
     //P.show(3);
     //P.showLabel("P");
   }//End If
+  else {for(int x=0;x<5000;x++)first_run[x]=true; }
   }//End Method
  
 void MYmousePressed() {
@@ -182,13 +183,13 @@ void  MYkeyReleased() {  }
 void MYshowHelp() {  // Application specific help text to appear in the help pane when user pressed the SPACE BAR
  text("CS 6491 -- Fall 2010 -- Instructor Jarek Rossignac",0,0); translate(0,20);
  text("Project 1: Constrained Delaunay Triangulation",0,0); translate(0,20);
- text("Student: Brian Ouellette",0,0); translate(0,20);
- text("Date submitted: September 9, 2010",0,0); translate(0,20);
+ text("Students: Brian Ouellette and Will Mooney",0,0); translate(0,20);
+ text("Date submitted: September 30, 2010",0,0); translate(0,20);
   text("  ",0,0); translate(0,20);
  text("USAGE  ",0,0); translate(0,20);
  text("Press the space-bar to hide/show this help page ",0,0); translate(0,20);
  text("Click near a point & drag to move closest point ",0,0); translate(0,20);
- text("Keep 'i', 'd', or 'a', and clic to insert, delete, or append a point",0,0); translate(0,20);
+ text("Keep 'i', 'd', or 'a', and click to insert, delete, or append a point",0,0); translate(0,20);
  text("Hold 'm', 't', or 'z', and click&drag to move, turn, or zoom ",0,0); translate(0,20);
  text("Press'0' to delete all points",0,0); translate(0,20);
  text("Press 'n', 'p', 'o', 'l', 'r', 's' to change current corner and 'w' to print it ",0,0); translate(0,20);
