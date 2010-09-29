@@ -128,6 +128,7 @@ void MYdraw () { // executed at each frame
         // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
         vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
         C.P[i] = T(center, tempVec);
+        /* Method 3 - As Rigid As Possible */
       }
       C.P[i].show(3);
       //C.P[i].showLabel("P"+i);
@@ -251,7 +252,7 @@ void MYcheckButtons() {          // checks whether any of my buttons was pressed
   buttonCounter.reset();  buttonCounter.i();
   if(computeTriangulation.check(buttonCounter.i())) compute();
   if(savePoints.check(buttonCounter.i())) C.savePts("data/P"+str(pC));
-  if(loadPoints.check(buttonCounter.i())) C.loadPts("data/P"+str(pC));
+  if(loadPoints.check(buttonCounter.i())) { C.loadPts("data/P"+str(pC)); for(int i = 0; i < 5000; i++) {first_run[i] = true;} }
   if(saveMesh.check(buttonCounter.i())) M.saveMesh();
   if(loadMesh.check(buttonCounter.i())) M.loadMesh();
   if(resetPoints.check(buttonCounter.i())) C.resetPoints();
