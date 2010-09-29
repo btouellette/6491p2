@@ -229,7 +229,7 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
  }
 
 //  ==========================================================  VERTICES ===========================================
- boolean showVertices=false;
+ boolean showVertices=true;//WAS FALSE
  int nv = 0;                              // current  number of vertices
  pt[] G = new pt [maxnv];                   // geometry table (vertices)
  pt[] G2 = new pt [maxnv]; //2008-03-06 JJ misc

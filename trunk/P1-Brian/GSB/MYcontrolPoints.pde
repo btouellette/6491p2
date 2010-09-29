@@ -130,7 +130,7 @@ void MYdraw () { // executed at each frame
         C.P[i] = T(center, tempVec);
       }
       C.P[i].show(3);
-      C.P[i].showLabel("P"+i);
+      //C.P[i].showLabel("P"+i);
     }
     //P.show(3);
     //P.showLabel("P");
@@ -207,6 +207,8 @@ COUNTER buttonCounter = new COUNTER();
 BUTTON computeTriangulation = new BUTTON("compute triangulation",1); // spray the curve and triangulate
 BUTTON savePoints = new BUTTON("save",1);  // save points toggle button: the '1' means that this is an action button (not a toggle)
 BUTTON loadPoints = new BUTTON("load",1);  // load points toggle button
+BUTTON saveMesh = new BUTTON("save mesh",1);  // save points toggle button: the '1' means that this is an action button (not a toggle)
+BUTTON loadMesh = new BUTTON("load mesh",1);  // load points toggle button
 BUTTON resetPoints = new BUTTON("reset",1);   // reset points in circle
 BUTTON snapPicture = new BUTTON("screen shot",1);  // snap screen-shot button the '1' means that this is an action button (not a toggle)
 BUTTON showEdges = new BUTTON("show curve",true);  // draw edges
@@ -227,6 +229,8 @@ void MYshowButtons() {           // shows all my buttons on the right of screen 
  computeTriangulation.show(buttonCounter.i());
  savePoints.show(buttonCounter.i());
  loadPoints.show(buttonCounter.i());
+ saveMesh.show(buttonCounter.i());
+ loadMesh.show(buttonCounter.i());
  resetPoints.show(buttonCounter.i());
  snapPicture.show(buttonCounter.i());
  showEdges.show(buttonCounter.i());
@@ -248,6 +252,8 @@ void MYcheckButtons() {          // checks whether any of my buttons was pressed
   if(computeTriangulation.check(buttonCounter.i())) compute();
   if(savePoints.check(buttonCounter.i())) C.savePts("data/P"+str(pC));
   if(loadPoints.check(buttonCounter.i())) C.loadPts("data/P"+str(pC));
+  if(saveMesh.check(buttonCounter.i())) M.saveMesh();
+  if(loadMesh.check(buttonCounter.i())) M.loadMesh();
   if(resetPoints.check(buttonCounter.i())) C.resetPoints();
   if(snapPicture.check(buttonCounter.i())) makingPicture=true;  // set makingPicture used not to show the menu
   showEdges.check(buttonCounter.i());  // toggles showEdges
