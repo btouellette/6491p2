@@ -531,7 +531,32 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
          }
          println(barycentric[c][0]+" "+barycentric[c][1]+" "+" "+barycentric[c][2]);
        }
-    };
+    }
+    
+    void updateBarycentric(LOOP L)
+    {
+      // Hard code this size to 100 for now, should be enough
+      // This will store all corners whose barycentric coordinates we need to take into account in updating a point
+      int[] validCorners = new int[100];
+      int numVC = 0;
+      // For every corner
+      for(int c=0; c<nc; c++)
+      {
+        // If we have an opposite
+        if(o(c)!=c) {
+          validCorners[numVC++] = c;
+          // Update its barycentric coordinates according to Method 3
+          for(int c2=0; c<nc; c++) {
+            // If this corner has the same point as the opposite of the corner we're at and it has an opposite
+            if(g(c2) == g(o(c)) && o(c2) != c2 && c != c2) {
+              // Then we need to take into account o(c2)'s barycentric coords in the calculations
+              validCorners[numVC++] = o(c2);
+            }
+          }
+        }
+        numVC = 0;
+      }
+    }
 
   } // ==== END OF MESH CLASS
   
