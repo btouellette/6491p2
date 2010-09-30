@@ -13,6 +13,7 @@ boolean showHelpText=true, showMenu=true;      // toggled by keys to show/hide h
 boolean debug=false;           // temporarily set when key '?' is pressed and used to print some debugging values
 boolean makingPicture=false;    // used to prevent the menu from showing when making pictures
 PImage pic; // picture of author's face that is displayed in the help pane, read from file pic.jpg in data folder
+PImage pic2;
 
 void setup() {  // Executed once
   //size(900,700); // Opens graphic canvas (wider for manu on the right)
@@ -21,6 +22,7 @@ void setup() {  // Executed once
   rectMode(CENTER); // needed for buttons to work properly !
   PFont font = loadFont("ArialMT-24.vlw"); textFont(font, 16);      // load font for writing on the canvas
   pic = loadImage("brian.jpg");                                  // load image names pic from file pic.jpg in folder data
+  pic2 = loadImage("face.png");
   MYsetup();                                                        // execute application specific setup tasks (see MYxxx)
   } 
 

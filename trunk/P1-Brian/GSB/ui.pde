@@ -13,7 +13,8 @@ void keyPressed() {
 void mouseMoved() {if(!ui_picked) MYmouseMoved(); } 
 
 void showHelp() {
-   image(pic, width-pic.width, 0); 
+   image(pic, width-(pic.width+pic2.width), 0); 
+   image(pic2, width-pic2.width, 0);
    pushMatrix(); translate(20,20);
    fill(black);
    MYshowHelp();
