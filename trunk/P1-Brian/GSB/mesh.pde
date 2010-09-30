@@ -535,49 +535,49 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
     
     void updateBarycentric(LOOP C)
     {
-//      // Hard code this size to 100 for now, should be enough
-//      // This will store all corners whose barycentric coordinates we need to take into account in updating a point
-//      int[] validCorners = new int[100];
-//      boolean[] updatedPoints = new boolean[100];
-//      int numVC = 0;
-//      // For every corner
-//      for(int c=0; c<nc; c++)
-//      {
-//        // If we have an opposite
-//        if(o(c)!=c) {
-//          validCorners[numVC++] = o(c);
-//          // Update its barycentric coordinates according to Method 3
-//          for(int c2=0; c<nc; c++) {
-//            // If this corner has the same point as the corner we're at and it has an opposite
-//            if(g(c2) == g(c) && o(c2) != c2 && c != c2) {
-//              // Then we need to take into account o(c2)'s barycentric coords in the calculations
-//              validCorners[numVC++] = o(c2);
-//            }
-//          }
-//          // Make sure we don't hit the same vertex more than once
-//          if(!updatedPoints[g(c)]) {
-//            updatedPoints[g(c)] = true;
-//            // This will hold the final vector between the old point and the averaged target
-//            vec finalVec = V(0,0);
-//            pt oldPt = C.P[g(c)];            
-//            for (int i = 0; i < numVC; i++) {
-//              // Compute the new X,Y point from the barycentric coords
-//              int tk = t(validCorners[i]);
-//              pt tkA = g(tk);
-//              pt tkB = g(tk+1);
-//              pt tkC = g(tk+2);
-//              float targetX = barycentric[validCorners[i]][0]*tkA.x +
-//                              barycentric[validCorners[i]][1]*tkB.x +
-//                              barycentric[validCorners[i]][2]*tkC.x;
-//              float targetY = barycentric[validCorners[i]][0]*tkA.y +
-//                              barycentric[validCorners[i]][1]*tkB.y +
-//                              barycentric[validCorners[i]][2]*tkC.y;
-//              finalVec = S(finalVec, V(oldPt, 1.0/numVC, target));
-//            }
-//          }
-//          numVC = 0;
-//        }
-//      }
+      // Hard code this size to 100 for now, should be enough
+      // This will store all corners whose barycentric coordinates we need to take into account in updating a point
+      int[] validCorners = new int[100];
+      boolean[] updatedPoints = new boolean[100];
+      int numVC = 0;
+      // For every corner
+      for(int c=0; c<nc; c++)
+      {
+        // If we have an opposite
+        if(o(c)!=c) {
+          validCorners[numVC++] = o(c);
+          // Update its barycentric coordinates according to Method 3
+          for(int c2=0; c<nc; c++) {
+            // If this corner has the same point as the corner we're at and it has an opposite
+            if(g(c2) == g(c) && o(c2) != c2 && c != c2) {
+              // Then we need to take into account o(c2)'s barycentric coords in the calculations
+              validCorners[numVC++] = o(c2);
+            }
+          }
+          // Make sure we don't hit the same vertex more than once
+          if(!updatedPoints[v(c)]) {
+            updatedPoints[v(c)] = true;
+            // This will hold the final vector between the old point and the averaged target
+            vec finalVec = V(0,0);
+            pt oldPt = C.P[v(c)];      //Not sure this is the right correction!!!!!
+            for (int i = 0; i < numVC; i++) {
+              // Compute the new X,Y point from the barycentric coords
+              int tk = t(validCorners[i]);
+              pt tkA = g(tk);
+              pt tkB = g(tk+1);
+              pt tkC = g(tk+2);
+              float targetX = barycentric[validCorners[i]][0]*tkA.x +
+                              barycentric[validCorners[i]][1]*tkB.x +
+                              barycentric[validCorners[i]][2]*tkC.x;
+              float targetY = barycentric[validCorners[i]][0]*tkA.y +
+                              barycentric[validCorners[i]][1]*tkB.y +
+                              barycentric[validCorners[i]][2]*tkC.y;
+             // finalVec = S(finalVec, V(oldPt, 1.0/numVC, target));
+            }
+          }
+          numVC = 0;
+        }
+      }
     }
 
   } // ==== END OF MESH CLASS
