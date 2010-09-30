@@ -545,13 +545,13 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
       {
         // If we have an opposite
         if(o(c)!=c) {
-          validCorners[numVC++] = o(c);
+          validCorners[numVC++] = c;
           // Update its barycentric coordinates according to Method 3
           for(int c2=0; c<nc; c++) {
             // If this corner has the same point as the corner we're at and it has an opposite
             if(v(c2) == v(c) && o(c2) != c2 && c != c2) {
               // Then we need to take into account o(c2)'s barycentric coords in the calculations
-              validCorners[numVC++] = o(c2);
+              validCorners[numVC++] = c2;
             }
           }
           // Make sure we don't hit the same vertex more than once
@@ -569,13 +569,68 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
               float targetX = barycentric[validCorners[i]][0]*tkA.x +
                               barycentric[validCorners[i]][1]*tkB.x +
                               barycentric[validCorners[i]][2]*tkC.x;
+              if(targetX == 0.0) {
+                targetX = oldPt.x;
+              }
               float targetY = barycentric[validCorners[i]][0]*tkA.y +
                               barycentric[validCorners[i]][1]*tkB.y +
                               barycentric[validCorners[i]][2]*tkC.y;
+              if(targetY == 0.0) {
+                targetY = oldPt.y;
+              }
               pt target = new pt(targetX,targetY);
               finalVec = S(finalVec, 1.0/numVC, V(oldPt, target));
             }
             finalVec = S(0.5, finalVec);
+            // Move the point halfway towards its barycentric center (in the loop and the mesh)
+            C.P[v(c)] = T(C.P[v(c)], finalVec);
+            G[v(c)] = T(G[v(c)], finalVec);
+          }
+          numVC = 0;
+        }
+      }
+      // For every corner move the vertex halfway to its average barycentric center
+      for(int c=0; c<nc; c++)
+      {
+        // If we have an opposite
+        if(o(c)!=c) {
+          validCorners[numVC++] = c;
+          // Update its barycentric coordinates according to Method 3
+          for(int c2=0; c<nc; c++) {
+            // If this corner has the same point as the corner we're at and it has an opposite
+            if(v(c2) == v(c) && o(c2) != c2 && c != c2) {
+              // Then we need to take into account o(c2)'s barycentric coords in the calculations
+              validCorners[numVC++] = c2;
+            }
+          }
+          // Make sure we don't hit the same vertex more than once
+          if(!updatedPoints[v(c)]) {
+            updatedPoints[v(c)] = true;
+            // This will hold the final vector between the old point and the averaged target
+            vec finalVec = V(0,0);
+            pt oldPt = g(c);
+            for (int i = 0; i < numVC; i++) {
+              // Compute the new X,Y point from the barycentric coords
+              int tk = t(validCorners[i]);
+              pt tkA = g(tk);
+              pt tkB = g(tk+1);
+              pt tkC = g(tk+2);
+              float targetX = barycentric[validCorners[i]][0]*tkA.x +
+                              barycentric[validCorners[i]][1]*tkB.x +
+                              barycentric[validCorners[i]][2]*tkC.x;
+              if(targetX == 0.0) {
+                targetX = oldPt.x;
+              }
+              float targetY = barycentric[validCorners[i]][0]*tkA.y +
+                              barycentric[validCorners[i]][1]*tkB.y +
+                              barycentric[validCorners[i]][2]*tkC.y;
+              if(targetY == 0.0) {
+                targetY = oldPt.y;
+              }
+              pt target = new pt(targetX,targetY);
+              finalVec = S(finalVec, 1.0/numVC, V(oldPt, target));
+            }
+            finalVec = S(-0.5, finalVec);
             // Move the point halfway towards its barycentric center (in the loop and the mesh)
             C.P[v(c)] = T(C.P[v(c)], finalVec);
             G[v(c)] = T(G[v(c)], finalVec);
