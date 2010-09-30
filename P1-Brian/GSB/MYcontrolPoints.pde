@@ -79,7 +79,7 @@ boolean behindCurveC(pt P,pt center,float radius)
 
 
 void MYdraw () { // executed at each frame
-  scribeBlack("Project 1 (Constrained Delaunay Triangulation) by Brian Ouellette",0);
+  scribeBlack("Project 2 (Area-preserving skeleton-driven deformation) by Will Mooney and Brian Ouellette",0);
   /*scribeBlack("The mesh has "+C.n+" points and "+M.nt+" triangles",1);*/
   if(showTriangles.isTrue)  C.showDelaunayOfPoints(-2); 
   if(showMesh.isTrue)  M.showMesh(); 
@@ -135,7 +135,7 @@ void MYdraw () { // executed at each frame
         {
           //Use Method 3
           // Only do this once for the entire mesh
-          if(i==0 && radius != prev_radius) {
+          if(i==0){// && radius != prev_radius) {
             M.updateBarycentric(C);
           }
           distance = distanceTo[i];
@@ -219,7 +219,7 @@ void  MYkeyReleased() {  }
    
 void MYshowHelp() {  // Application specific help text to appear in the help pane when user pressed the SPACE BAR
  text("CS 6491 -- Fall 2010 -- Instructor Jarek Rossignac",0,0); translate(0,20);
- text("Project 1: Constrained Delaunay Triangulation",0,0); translate(0,20);
+ text("Project 2: Area-preserving skeleton-driven deformation",0,0); translate(0,20);
  text("Students: Brian Ouellette and Will Mooney",0,0); translate(0,20);
  text("Date submitted: September 30, 2010",0,0); translate(0,20);
   text("  ",0,0); translate(0,20);
@@ -233,6 +233,13 @@ void MYshowHelp() {  // Application specific help text to appear in the help pan
  text("Press 'f' to flip the edge opposite to the current corner",0,0); translate(0,20);
  text("  ",0,0); translate(0,20);
  text("ADDITIONAL COMMANDS FOR THIS PROJECT:",0,0); translate(0,20);
+ text("Working commands:",0,0); translate(0,20);
+ text("m - translate entire mesh and arc",0,0); translate(0,20);
+ text("A - translate point A (this is capital A distinct from lowercase a)",0,0); translate(0,20);
+ text("B - translate point B",0,0); translate(0,20);
+ text("O - translate point O",0,0); translate(0,20);
+ text("The center can't be moved explicitly, just by translating the entire arc",0,0); translate(0,20);
+ text("Since we are updating the mesh directly, adding and deleting points may result in undefined behavior",0,0); translate(0,20);
  text("  ",0,0); translate(0,20);
  text("  ",0,0); translate(0,20);
  }
