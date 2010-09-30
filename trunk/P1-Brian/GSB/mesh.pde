@@ -147,6 +147,7 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
  boolean[] visible = new boolean[maxnt];    // set if triangle visible
  boolean[] outside = new boolean[maxnt];    // set if triangle outside loop
  boolean[] stabbed = new boolean[maxnt];    // set if triangle stabbed by loop
+ float[] prev_area = new float[maxnt];
  boolean vis(int c) {return visible[t(c)]; };   // true if triangle of c is visible
  int[] Mt = new int[maxnt];                 // triangle markers for distance and other things   
  boolean [] VisitedT = new boolean [maxnt];  // triangle visited
@@ -163,6 +164,24 @@ void showBorder() {for (int i=0; i<nc; i++) {if (b(i)) {drawEdge(i);}; }; };    
        fill(lred);
      else
        fill(lgreen);
+       
+     pt tA = g(t);
+     pt tB = g(t+1);
+     pt tC = g(t+2);
+     float tkArea = abs(area(tA,tB,tC));
+     if(prev_area[t] == 0.0) {
+       fill(lgreen);
+     } else {
+       if(abs(tkArea - prev_area[t]) < 0.001) {
+         fill(lgreen);
+       } else if (tkArea > prev_area[t]) {
+         fill(lblue);
+       } else if (tkArea < prev_area[t]) {
+         fill(lred);
+       }
+     }
+     prev_area[t] = tkArea;
+     
      if(visible[t])
        show(g(3*t),g(3*t+1),g(3*t+2),-2);
    };
@@ -509,7 +528,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
            pt tkB = g(tk+1);
            pt tkC = g(tk+2);
            //Compute the barycentric coordinates w/respect to the opposite triangle
-           float tkArea = area(tkA,tkB,tkC);
+           float tkArea = abs(area(tkA,tkB,tkC));
            if(abs(tkArea) < 0.001) //If we leave it without this check, points may end up with Infinity, -Infinity, and NaN for coordinates.
            {
              barycentric[c][0] = 0.0;
@@ -518,9 +537,9 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
            }
            else
            {
-             barycentric[c][0] = area(vi,tkB,tkC)/tkArea;
-             barycentric[c][1] = area(tkA,vi,tkC)/tkArea;
-             barycentric[c][2] = area(tkA,tkB,vi)/tkArea;
+             barycentric[c][0] = abs(area(vi,tkB,tkC))/tkArea;
+             barycentric[c][1] = abs(area(tkA,vi,tkC))/tkArea;
+             barycentric[c][2] = abs(area(tkA,tkB,vi))/tkArea;
            }
          }
          else
