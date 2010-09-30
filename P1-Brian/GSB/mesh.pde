@@ -547,7 +547,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
         if(o(c)!=c) {
           validCorners[numVC++] = c;
           // Update its barycentric coordinates according to Method 3
-          for(int c2=0; c<nc; c++) {
+          for(int c2=0; c2<nc; c2++) {
             // If this corner has the same point as the corner we're at and it has an opposite
             if(v(c2) == v(c) && o(c2) != c2 && c != c2) {
               // Then we need to take into account o(c2)'s barycentric coords in the calculations
@@ -596,7 +596,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
         if(o(c)!=c) {
           validCorners[numVC++] = c;
           // Update its barycentric coordinates according to Method 3
-          for(int c2=0; c<nc; c++) {
+          for(int c2=0; c2<nc; c2++) {
             // If this corner has the same point as the corner we're at and it has an opposite
             if(v(c2) == v(c) && o(c2) != c2 && c != c2) {
               // Then we need to take into account o(c2)'s barycentric coords in the calculations
