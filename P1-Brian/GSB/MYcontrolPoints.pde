@@ -134,6 +134,10 @@ void MYdraw () { // executed at each frame
         else if(useMethod3.isTrue)
         {
           //Use Method 3
+          // Only do this once for the entire mesh
+          if(i==0 && radius != prev_radius) {
+            M.updateBarycentric(C);
+          }
           distance = distanceTo[i];
         }
         else if(useMethod2.isTrue)
@@ -149,16 +153,18 @@ void MYdraw () { // executed at each frame
         if (Float.isNaN(distance)) {
           C.P[i].setTo(center);
         } else {
-          /* Method 1 - Skeleton bending */
-          // Angle won't scale
-          // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
-          vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
-          C.P[i] = T(center, tempVec);
-          /* Method 3 - As Rigid As Possible */
+          // Only update the distance in this way for methods 1 and 2
+          if(useMethod2.isTrue && !(useMethod3.isTrue || useMethod4.isTrue)) {
+            // Angle won't scale
+            // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
+            vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
+            C.P[i] = T(center, tempVec);
+          }
         }
       }
       //C.P[i].showLabel("P"+i);
     }
+    prev_radius = radius;
     C.updatePoints(M);
     for(int i=0; i<C.n;i++) {
       C.P[i].show(3);

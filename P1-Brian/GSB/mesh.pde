@@ -529,7 +529,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
            barycentric[c][1] = 0.0;
            barycentric[c][2] = 0.0;
          }
-         println(barycentric[c][0]+" "+barycentric[c][1]+" "+" "+barycentric[c][2]);
+         //println(barycentric[c][0]+" "+barycentric[c][1]+" "+" "+barycentric[c][2]);
        }
     }
     
@@ -540,7 +540,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
       int[] validCorners = new int[100];
       boolean[] updatedPoints = new boolean[100];
       int numVC = 0;
-      // For every corner
+      // For every corner move the vertex halfway to its average barycentric center
       for(int c=0; c<nc; c++)
       {
         // If we have an opposite
@@ -549,7 +549,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
           // Update its barycentric coordinates according to Method 3
           for(int c2=0; c<nc; c++) {
             // If this corner has the same point as the corner we're at and it has an opposite
-            if(g(c2) == g(c) && o(c2) != c2 && c != c2) {
+            if(v(c2) == v(c) && o(c2) != c2 && c != c2) {
               // Then we need to take into account o(c2)'s barycentric coords in the calculations
               validCorners[numVC++] = o(c2);
             }
@@ -559,7 +559,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
             updatedPoints[v(c)] = true;
             // This will hold the final vector between the old point and the averaged target
             vec finalVec = V(0,0);
-            pt oldPt = C.P[v(c)];      //Not sure this is the right correction!!!!!
+            pt oldPt = g(c);
             for (int i = 0; i < numVC; i++) {
               // Compute the new X,Y point from the barycentric coords
               int tk = t(validCorners[i]);
@@ -573,8 +573,12 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
                               barycentric[validCorners[i]][1]*tkB.y +
                               barycentric[validCorners[i]][2]*tkC.y;
               pt target = new pt(targetX,targetY);
-              finalVec = S(finalVec, V(oldPt, target)); //Removed "1.0/numVC," as the second argument here. There isn't a constructor that takes 3 args for the vector class 
+              finalVec = S(finalVec, 1.0/numVC, V(oldPt, target));
             }
+            finalVec = S(0.5, finalVec);
+            // Move the point halfway towards its barycentric center (in the loop and the mesh)
+            C.P[v(c)] = T(C.P[v(c)], finalVec);
+            G[v(c)] = T(G[v(c)], finalVec);
           }
           numVC = 0;
         }
