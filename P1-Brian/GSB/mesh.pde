@@ -572,7 +572,8 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
               float targetY = barycentric[validCorners[i]][0]*tkA.y +
                               barycentric[validCorners[i]][1]*tkB.y +
                               barycentric[validCorners[i]][2]*tkC.y;
-             // finalVec = S(finalVec, V(oldPt, 1.0/numVC, target));
+              pt target = new pt(targetX,targetY);
+              finalVec = S(finalVec, V(oldPt, target)); //Removed "1.0/numVC," as the second argument here. There isn't a constructor that takes 3 args for the vector class 
             }
           }
           numVC = 0;
