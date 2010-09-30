@@ -510,7 +510,7 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
            pt tkC = g(tk+2);
            //Compute the barycentric coordinates w/respect to the opposite triangle
            float tkArea = area(tkA,tkB,tkC);
-           if(1-tkArea>0.999&&1-tkArea<1.001) //If we leave it without this check, points may end up with Infinity, -Infinity, and NaN for coordinates.
+           if(abs(tkArea) < 0.001) //If we leave it without this check, points may end up with Infinity, -Infinity, and NaN for coordinates.
            {
              barycentric[c][0] = 0.0;
              barycentric[c][1] = 0.0;
@@ -531,7 +531,6 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
          }
          println(barycentric[c][0]+" "+barycentric[c][1]+" "+" "+barycentric[c][2]);
        }
-       if(nc>5){exit();}
     };
 
   } // ==== END OF MESH CLASS
