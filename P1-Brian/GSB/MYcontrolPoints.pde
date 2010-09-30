@@ -108,6 +108,9 @@ void MYdraw () { // executed at each frame
     center.showLabel("center");
     // Angle is -pi/2 to pi/2, this is the arcangle of the arc
     float angle = angle(A, center, B);
+    if(first_run[0]) {
+      M.computeBarycentric();
+    }
     for(int i=0;i<C.n;i++)
     {
       if(first_run[i]) {
