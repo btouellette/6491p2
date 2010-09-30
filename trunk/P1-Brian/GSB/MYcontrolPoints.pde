@@ -123,12 +123,16 @@ void MYdraw () { // executed at each frame
         // Recalculate where P should be with the potential new radius and O position
         // Scale distance to P with the scale in radius
         float distance = (sqrt(radius*original_radius*(radius*original_radius + 2*original_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*original_radius)/original_radius;
-        /* Method 1 - Skeleton bending */
-        // Angle won't scale
-        // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
-        vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
-        C.P[i] = T(center, tempVec);
-        /* Method 3 - As Rigid As Possible */
+        if (Float.isNaN(distance)) {
+          C.P[i].setTo(center);
+        } else {
+          /* Method 1 - Skeleton bending */
+          // Angle won't scale
+          // Take the vector from the center to O and rotate it by the angle to P and then scale it so that the end point is the new P location
+          vec tempVec = S(1+distance/radius, R(V(center,O), angleTo[i]));
+          C.P[i] = T(center, tempVec);
+          /* Method 3 - As Rigid As Possible */
+        }
       }
       //C.P[i].showLabel("P"+i);
     }
