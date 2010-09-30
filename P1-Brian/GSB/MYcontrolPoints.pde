@@ -125,7 +125,27 @@ void MYdraw () { // executed at each frame
         /* Method 2 - Area corrected skeleton bending */
         // Recalculate where P should be with the potential new radius and O position
         // Scale distance to P with the scale in radius
-        float distance = (sqrt(radius*original_radius*(radius*original_radius + 2*original_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*original_radius)/original_radius;
+        float distance;
+        // The highest number will take priority because I don't know how to do radio buttons in 
+        if(useMethod4.isTrue)
+        {
+          distance = distanceTo[i];
+        }
+        else if(useMethod3.isTrue)
+        {
+          //Use Method 3
+          distance = distanceTo[i];
+        }
+        else if(useMethod2.isTrue)
+        {
+          //Use Method 2
+          distance = (sqrt(radius*original_radius*(radius*original_radius + 2*original_radius*distanceTo[i] + distanceTo[i]*distanceTo[i])) - radius*original_radius)/original_radius;
+        }
+        else
+        {
+          //Use Method 1
+          distance = distanceTo[i];
+        }
         if (Float.isNaN(distance)) {
           C.P[i].setTo(center);
         } else {
@@ -232,6 +252,9 @@ BUTTON showTriangles = new BUTTON("show triangles",false); // show triangles
 BUTTON computeMesh = new BUTTON("rebuild mesh",1); // computes triangle mesh
 BUTTON showMesh = new BUTTON("show mesh",true); // show triangle mesh
 BUTTON showArc = new BUTTON("show arc",true); // show arc
+BUTTON useMethod2 = new BUTTON("Use solver 2: Area-Corrected Skeleton Building",true); // Use method 2
+BUTTON useMethod3 = new BUTTON("Use solver 3: As-Rigid-As-Possible",true); // Use method 3
+BUTTON useMethod4 = new BUTTON("Use solver 4: Area-Corrected As-Rigid-As-Possible",true); // Use method 4
 
 void MYshowButtons() {           // shows all my buttons on the right of screen with their status and labels
  fill(metal); scribe("Constrained triangulation",height,15); scribe("Menu:",height,35);
@@ -254,6 +277,9 @@ void MYshowButtons() {           // shows all my buttons on the right of screen 
  computeMesh.show(buttonCounter.i());
  showMesh.show(buttonCounter.i());
  showArc.show(buttonCounter.i());
+ useMethod2.show(buttonCounter.i());
+ useMethod3.show(buttonCounter.i());
+ useMethod4.show(buttonCounter.i());
  }
 
 // THE ORDER IN WHICH THE BOTTONS ARE CREATE (ABOVE) AND ACTIVATED (BELOW) MUST BE IDENTICAL
@@ -277,6 +303,9 @@ void MYcheckButtons() {          // checks whether any of my buttons was pressed
   if(computeMesh.check(buttonCounter.i())) { C.makeDelaunayOfPoints(M); M.classifyTriangles(C); }
   showMesh.check(buttonCounter.i());
   showArc.check(buttonCounter.i());
+  useMethod2.check(buttonCounter.i());
+  useMethod3.check(buttonCounter.i());
+  useMethod4.check(buttonCounter.i());
   }
 
 // PROJECT 1 COMPUTATION
