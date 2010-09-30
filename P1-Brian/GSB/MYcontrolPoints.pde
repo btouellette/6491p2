@@ -259,8 +259,8 @@ BUTTON computeMesh = new BUTTON("rebuild mesh",1); // computes triangle mesh
 BUTTON showMesh = new BUTTON("show mesh",true); // show triangle mesh
 BUTTON showArc = new BUTTON("show arc",true); // show arc
 BUTTON useMethod2 = new BUTTON("Use solver 2: Area-Corrected Skeleton Building",true); // Use method 2
-BUTTON useMethod3 = new BUTTON("Use solver 3: As-Rigid-As-Possible",true); // Use method 3
-BUTTON useMethod4 = new BUTTON("Use solver 4: Area-Corrected As-Rigid-As-Possible",true); // Use method 4
+BUTTON useMethod3 = new BUTTON("Use solver 3: As-Rigid-As-Possible",false); // Use method 3
+BUTTON useMethod4 = new BUTTON("Use solver 4: Area-Corrected As-Rigid-As-Possible",false); // Use method 4
 
 void MYshowButtons() {           // shows all my buttons on the right of screen with their status and labels
  fill(metal); scribe("Constrained triangulation",height,15); scribe("Menu:",height,35);
