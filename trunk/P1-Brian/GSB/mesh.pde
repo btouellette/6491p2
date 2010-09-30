@@ -560,6 +560,8 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
             // This will hold the final vector between the old point and the averaged target
             vec finalVec = V(0,0);
             pt oldPt = g(c);
+            vec[] allVecs = new vec[numVC];
+            int realNumVC = 0;
             for (int i = 0; i < numVC; i++) {
               // Compute the new X,Y point from the barycentric coords
               int tk = t(validCorners[i]);
@@ -569,17 +571,20 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
               float targetX = barycentric[validCorners[i]][0]*tkA.x +
                               barycentric[validCorners[i]][1]*tkB.x +
                               barycentric[validCorners[i]][2]*tkC.x;
-              if(targetX == 0.0) {
-                targetX = oldPt.x;
-              }
               float targetY = barycentric[validCorners[i]][0]*tkA.y +
                               barycentric[validCorners[i]][1]*tkB.y +
                               barycentric[validCorners[i]][2]*tkC.y;
-              if(targetY == 0.0) {
+              if(targetX == 0.0) {
+                targetX = oldPt.x;
+              } else if(targetY == 0.0) {
                 targetY = oldPt.y;
+              } else {
+                pt target = new pt(targetX,targetY);
+                allVecs[realNumVC++] = V(oldPt, target);
               }
-              pt target = new pt(targetX,targetY);
-              finalVec = S(finalVec, 1.0/numVC, V(oldPt, target));
+            }
+            for(int i=0; i<realNumVC; i++) {
+              finalVec = S(finalVec, 1.0/realNumVC, allVecs[i]);
             }
             finalVec = S(0.5, finalVec);
             // Move the point halfway towards its barycentric center (in the loop and the mesh)
@@ -609,6 +614,8 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
             // This will hold the final vector between the old point and the averaged target
             vec finalVec = V(0,0);
             pt oldPt = g(c);
+            vec[] allVecs = new vec[numVC];
+            int realNumVC = 0;
             for (int i = 0; i < numVC; i++) {
               // Compute the new X,Y point from the barycentric coords
               int tk = t(validCorners[i]);
@@ -618,17 +625,20 @@ void collapse(int c) {if (b(c)) return;      // collapse edge opposite to corner
               float targetX = barycentric[validCorners[i]][0]*tkA.x +
                               barycentric[validCorners[i]][1]*tkB.x +
                               barycentric[validCorners[i]][2]*tkC.x;
-              if(targetX == 0.0) {
-                targetX = oldPt.x;
-              }
               float targetY = barycentric[validCorners[i]][0]*tkA.y +
                               barycentric[validCorners[i]][1]*tkB.y +
                               barycentric[validCorners[i]][2]*tkC.y;
-              if(targetY == 0.0) {
+              if(targetX == 0.0) {
+                targetX = oldPt.x;
+              } else if(targetY == 0.0) {
                 targetY = oldPt.y;
+              } else {
+                pt target = new pt(targetX,targetY);
+                allVecs[realNumVC++] = V(oldPt, target);
               }
-              pt target = new pt(targetX,targetY);
-              finalVec = S(finalVec, 1.0/numVC, V(oldPt, target));
+            }
+            for(int i=0; i<realNumVC; i++) {
+              finalVec = S(finalVec, 1.0/realNumVC, allVecs[i]);
             }
             finalVec = S(-0.5, finalVec);
             // Move the point halfway towards its barycentric center (in the loop and the mesh)
